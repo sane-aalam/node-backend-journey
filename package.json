@@ -1,0 +1,31 @@
+{
+  "name": "backend-journey",
+  "version": "1.0.0",
+  "description": " focusing on Backend Development (Node.js, Express, APIs, etc.)",
+  "scripts":{
+    "start": "node src/index.js",
+  "dev": "nodemon src/index.js"
+  },
+  "keywords": [
+    "javascript",
+    "node.js",
+    "backend",
+    "expess",
+    "mongoDB"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "node-backend-journey"
+  },
+  "license": "ISC",
+  "author": "sane-aalam",
+  "type": "commonjs",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^5.1.0",
+    "mongoose": "^8.15.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
