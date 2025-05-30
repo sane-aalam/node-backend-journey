@@ -1,12 +1,9 @@
-const express = require('express');
-const app = express();
 
-console.log("hello world1")
+import dotenv from "dotenv"
+import connectDB from "./db/index.js";
 
-app.get('/', (req, res) => {
-  res.send('set up my first backend project with node.js');
-});
+dotenv.config({
+    path: './.env'
+})
 
-console.log("hello world2")
-
-app.listen(5000);
+connectDB();
