@@ -8,7 +8,7 @@
        )
        .catch((error) => {
            console.log(error);
-       });
+       });2
     
     console.log(uploadResult);
 
