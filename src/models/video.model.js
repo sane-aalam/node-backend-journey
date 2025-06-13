@@ -1,21 +1,22 @@
 
-import mongoose, { Schema } from "mongoose";
-// Mongoose supports .aggregate() for complex queries (like $lookup, $group, etc.)
-import mongooseAggregatePaginate from " mongoose-aggregate-paginate-v2";
+import mongoose, {Schema} from "mongoose";
+import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
-const VideoSchema = new Schema({
-    videoFile:{
-        type:String, //cloudinary url
-        required:true,
-    },
-    thumbnail:{
-         type: String, //cloudinary url
-         required: true
-    },title:{
-        type:String,
-        required:true,
-    },
-     description: {
+const videoSchema = new Schema(
+    {
+        videoFile: {
+            type: String, //cloudinary url
+            required: true
+        },
+        thumbnail: {
+            type: String, //cloudinary url
+            required: true
+        },
+        title: {
+            type: String, 
+            required: true
+        },
+        description: {
             type: String, 
             required: true
         },
@@ -30,15 +31,18 @@ const VideoSchema = new Schema({
         isPublished: {
             type: Boolean,
             default: true
-    },
-    owner:{
-        type:Schema.Types.ObjectId,
-        ref:"User"
+        },
+        owner: {
+            type: Schema.Types.ObjectId,
+            ref: "User"
+        }
+
+    }, 
+    {
+        timestamps: true
     }
-},
- { timestamps: true} // createAt,updateAt
 )
 
-VideoSchema.plugin(mongooseAggregatePaginate);
+videoSchema.plugin(mongooseAggregatePaginate)
 
-export const Video = mongoose.model("Video",VideoSchema);
+export const Video = mongoose.model("Video", videoSchema)

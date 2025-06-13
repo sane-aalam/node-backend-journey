@@ -1,46 +1,42 @@
-
-import {asyncHandler} from "../utils/asyncHandler.js";
-import {ApiError} from "../utils/ApiError.js";
-import {User} from "../models/user.model.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import {ApiError} from "../utils/ApiError.js"
+import { User} from "../models/user.model.js"
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 
-const registerUser = asyncHandler( async(req,res) =>{
-// get user details from frontend
-// validation - not empty
-// check if user already exists: username, email
-// check for images, check for avatar
-// upload them to cloudinary, avatar
-// create user object - create entry in db
-// remove password and refresh token field from response
-// check for user creation
-// return res
-// message: "System initialized successfully. All services operational.",
-// value: 1,
-// username,email,fullname,avatar,coverImage,password,refreshToken,createAT,updateAT
-  
-   const { username, email, fullname, password } = req.body;
-   console.log("email", email);
+const registerUser = asyncHandler( async (req, res) => {
+    // get user details from frontend
+    // validation - not empty
+    // check if user already exists: username, email
+    // check for images, check for avatar
+    // upload them to cloudinary, avatar
+    // create user object - create entry in db
+    // remove password and refresh token field from response
+    // check for user creation
+    // return res
 
-    if([fullname,email,fullname,password].some((field) =>
-        field?.trim() === "")
-    ){
-        throw new ApiError(400,"All fields are required!");
+
+    const {fullname, email, username, password } = req.body
+    console.log("email: ", email);
+
+    if (
+        [fullname, email, username, password].some((field) => field?.trim() === "")
+    ) {
+        throw new ApiError(400, "All fields are required")
     }
 
-    // alredy existed user into db
-    const existedUserAlredy = await User.findOne({
-         $or: [{ username }, { email }]
+    const existedUser = await User.findOne({
+        $or: [{ username }, { email }]
     })
 
-    if(existedUserAlredy){
+    if (existedUser) {
         throw new ApiError(409, "User with email or username already exists")
     }
 
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    console.log(req.files);
-    //const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    console.log(avatarLocalPath);
 
     let coverImageLocalPath;
     if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
@@ -48,6 +44,7 @@ const registerUser = asyncHandler( async(req,res) =>{
     }
     console.log(coverImageLocalPath);
     
+
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is required")
     }
@@ -58,12 +55,11 @@ const registerUser = asyncHandler( async(req,res) =>{
     if (!avatar) {
         throw new ApiError(400, "Avatar file is required")
     }
+   
 
-    // create new Documenet to store into db
-    // connect with db
     const user = await User.create({
-        fullName,
-        avatar: avatar.url || "",
+        fullname,
+        avatar: avatar.url,
         coverImage: coverImage?.url || "",
         email, 
         password,
@@ -81,6 +77,10 @@ const registerUser = asyncHandler( async(req,res) =>{
     return res.status(201).json(
         new ApiResponse(200, createdUser, "User registered Successfully")
     )
-})
 
-export {registerUser};
+} )
+
+
+export {
+    registerUser
+}

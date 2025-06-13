@@ -1,103 +1,102 @@
-// step-1 define mongoose 
+// step-1 define mongoose
 // step-2 define schema
 // step-3 define model
 // username,email,fullname,avatar,coverImage,password,refreshToken,createAT,updateAT
 
 import mongoose, { Schema } from "mongoose";
-import jwt from "jsonwebtoken"
-import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
-
-const UserSchema = new mongoose.Schema({
-    username:{
-        type:String,
-        required:true,
-        unique:true,
-        lowercase:true,
-        trim:true,
-        index:true
+const UserSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+      index: true,
     },
-    email:{
-        type:String,
-        required:true,
-        unique:true,
-        lowercase:true,
-        trim:true,
-        index:true,
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+      index: true,
     },
-    fullname:{
-        type:String,
-        required:true,
-        unique:true,
-        trim:true,
-        index:true
+    fullname: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      index: true,
     },
     avatar: {
-            type: String, // cloudinary url (wait)
-            required: true,
-        },
-        coverImage: {
-            type: String, // cloudinary url
+      type: String, // cloudinary url (wait)
+      required: true,
+    },
+    coverImage: {
+      type: String, // cloudinary url
     },
     watchHistory: [
-            {
-                type: Schema.Types.ObjectId, // relation with video model, watchhistroy video as queue
-                ref: "Video"
-            }
+      {
+        type: Schema.Types.ObjectId, // relation with video model, watchhistroy video as queue
+        ref: "Video",
+      },
     ],
     password: {
-            type: String,
-            required: [true, 'Password is required']
+      type: String,
+      required: [true, "Password is required"],
     },
     refreshToken: {
-            type: String
-    }
-},
-{timestamps:true }
-)
+      type: String,
+    },
+  },
+  { timestamps: true }
+);
 
 // This pre-save middleware hashes the password before saving a user document in MongoDB using bcrypt.
 UserSchema.pre("save", async function (next) {
-    if(!this.isModified("password")) return next();
+  if (!this.isModified("password")) return next();
 
-    this.password = await bcrypt.hash(this.password, 10)
-    next()
-})
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
 
 // Compare password checker
-UserSchema.methods.isPasswordCorrect = async function(password){
-    return await bcrypt.compare(password,this.password);
-}
+UserSchema.methods.isPasswordCorrect = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 
-UserSchema.methods.generateAccessToken = function(){
-    return jwt.sign(
-        {
-            _id: this._id,
-            email: this.email,
-            username: this.username,
-            fullName: this.fullName
-        },
-        process.env.ACCESS_TOKEN_SECRET,
-        {
-            expiresIn: process.env.ACCESS_TOKEN_EXPIRY
-        }
-    )
-}
+UserSchema.methods.generateAccessToken = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+      email: this.email,
+      username: this.username,
+      fullName: this.fullName,
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+    }
+  );
+};
 
-UserSchema.methods.generateRefreshToken  = function(){
-    return jwt.sign(
-        {
-            _id: this._id,
-        },
-        process.evn.REFRESH_TOKEN_SECRET,
-        {
-            expiresIn: process.env.REFRESH_TOKEN_EXPIRY
-        }
-    )
-}
+UserSchema.methods.generateRefreshToken = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+    },
+    process.evn.REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+    }
+  );
+};
 
-export const User = mongoose.model("user",UserSchema);
-
+export const User = mongoose.model("user", UserSchema);
 
 // Docs to understand everything
 // Hash password before saving

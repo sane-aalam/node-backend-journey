@@ -9,15 +9,18 @@ const router = Router();
 // register se pahle middleware likh do
 // now you are able to send the files(data) using postman
 
-router.route("/register").post(upload.fields([
-    {
-        name:"avater",
-        maxCount:1,
-    },{
-        name: 'coverImage', 
-        maxCount: 1
-    }
-]),
-registerUser);
+router.route("/register").post(
+    upload.fields([
+        {
+            name: "avatar",
+            maxCount: 1
+        }, 
+        {
+            name: "coverImage",
+            maxCount: 1
+        }
+    ]),
+    registerUser
+)
 
 export default router;
