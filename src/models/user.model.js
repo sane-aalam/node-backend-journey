@@ -3,12 +3,12 @@
 // step-3 define model
 // username,email,fullname,avatar,coverImage,password,refreshToken,createAT,updateAT
 
-import mongoose, { mongo } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 
 
-const UserSchema = mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     username:{
         type:String,
         required:true,
@@ -84,7 +84,7 @@ UserSchema.methods.generateAccessToken = function(){
     )
 }
 
-UserSchema.methods.refreshToken = function(){
+UserSchema.methods.generateRefreshToken  = function(){
     return jwt.sign(
         {
             _id: this._id,

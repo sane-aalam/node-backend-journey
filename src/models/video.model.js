@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 // Mongoose supports .aggregate() for complex queries (like $lookup, $group, etc.)
 import mongooseAggregatePaginate from " mongoose-aggregate-paginate-v2";
 
-const VideoSchema = mongoose.Schema({
+const VideoSchema = new Schema({
     videoFile:{
         type:String, //cloudinary url
         required:true,
